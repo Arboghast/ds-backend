@@ -1,39 +1,31 @@
 const express = require('express');
 const router = express.Router();
 
-//GET localhost:port/api/lobbies/
-router.get('/',(req,res) => {
-	
-)};
+//POST - Adds a user to the Users Table
+router.post('/addUser', (req,res) => {
+    //{id: ip&mac-based hash}
+});
 
-//GET localhost:3000/api/lobbies/1
-router.get('/startGame/:lobbycode',(req,res) => {
-	
-})
 
-//POST localhost:3000/api/lobbies/john/1
-router.post('/createLobby/:guest/:lobbycode',(req,res) => {
+//DELETE - Deletes a user from the Users Table
+router.delete('/deleteUser',(req,res) => {
 	
-})
+});
 
-//PUT localhost:3000/api/lobbies/john/1
-router.put('/joinLobby/:guest/:lobbycode',(req,res) => {
-	
-})
+//POST - Adds a writing prompt to the Prompt Table 
+router.post('/addPrompt', (req,res) => {
 
-//PUT localhost:3000/api/lobbies/john/1
-router.put('/leaveLobby/:guest/:lobbycode',(req,res) => {
-	
-})
+});
 
-//PUT localhost:3000/api/lobbies/john/1
-router.put('/kickUser/:guest/:lobbycode',(req,res) => {
-	
-})
+//DELETE - Deletes a writing prompt from the Prompt Table
+router.delete('/deletePrompt', (req,res) => {
 
-//PUT localhost:3000/api/lobbies/1
-router.delete('/removeLobby/:lobbycode',(req,res) => {
-	
-})
+});
+
+//GET - Returns a list of results sorted by category and time period
+router.get('/scoreboard', (req,res) => {
+    req.query.filterMethod; //contains the value of the users' chosen sortingMethod
+    req.query.timePeriod;  //contains the value of the users' chosen timeperiod
+});
 
 module.exports = router;
