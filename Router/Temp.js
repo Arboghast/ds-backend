@@ -11,7 +11,7 @@ connection.connect();
 //POST - Adds a user to the Users Table
 router.post('/addUser', (req,res) => {
     //{id: ip&mac-based hash}
-    connection.query("INSERT INTO user (User) VALUES ('" + req.body.id + "')", function (err,entry) {
+    connection.query("INSERT INTO User (User) VALUES ('" + req.body.id + "')", function (err,entry) {
         if (err) throw err
 
         console.log("user created");
@@ -25,7 +25,7 @@ router.post('/addUser', (req,res) => {
 //DELETE - Deletes a user from the Users Table
 router.delete('/deleteUser',(req,res) => {
 
-    connection.query("DELETE FROM user WHERE User='" + req.body.id + "'", function (err,rows,fields){
+    connection.query("DELETE FROM User WHERE User='" + req.body.id + "'", function (err,rows,fields){
         if(err) throw err
 
         console.log("user deleted");
@@ -38,7 +38,7 @@ router.delete('/deleteUser',(req,res) => {
 router.post('/addPrompt', (req,res) => {
 
     let data = req.body;
-    connection.query("INSERT INTO prompts (Number, Text) VALUES (" + data.Number +",'"+ data.Text + "');",function (err){
+    connection.query("INSERT INTO Prompt (Number, Text) VALUES (" + data.Number +",'"+ data.Text + "');",function (err){
         if(err) throw err
 
         console.log("Prompt inserted");
@@ -50,7 +50,7 @@ router.post('/addPrompt', (req,res) => {
 //DELETE - Deletes a writing prompt from the Prompt Table
 router.delete('/deletePrompt', (req,res) => {
 
-    connection.query("DELETE FROM prompts WHERE Text=" + "'" + req.body.Text + "'",function (err){
+    connection.query("DELETE FROM Prompt WHERE Text=" + "'" + req.body.Text + "'",function (err){
         if(err) throw err
 
         console.log("Prompt deleted");
