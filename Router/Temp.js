@@ -73,9 +73,13 @@ router.delete('/deleteUser',async (req,res) => {
 router.post('/addPrompt',async (req,res) => {
 
     let data = req.body;
-
+    let idnum = Math.floor(Math.random() * 1000);
+    while(await Prompt.findByPk(idnum) !== null){
+        idnum = Math.floor(Math.random * 1000);
+    }
     await Prompt.create({
 
+        id:idnum,
         prompt: data.Text
 
     })
@@ -88,11 +92,11 @@ router.post('/addPrompt',async (req,res) => {
 router.delete('/deletePrompt', async (req,res) => {
 
     let data = req.body;
-    await Prompt.findOne({where: {prompt: data.Text}})
+    await Prompt.findByPk(data.id)
         .then(async text => {
             if(text != null){
 
-                await Prompt.destroy({where: {prompt: data.Text}});
+                await Prompt.destroy({where: {id: data.id}});
                 res.sendStatus(200);
 
             }
