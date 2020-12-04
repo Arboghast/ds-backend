@@ -3,38 +3,23 @@ const router = express.Router();
 
 const db = require('./database');
 const User = require('../Models/User');
-//const db2 = require('./database2');
-//const Prompt = require('../Models/User');
+const Prompt = require('../Models/Prompt');
 
 //Test connection
 db.authenticate()
     .then(() => console.log("Database connected."))
     .catch(err => console.log(err));
 
-/*
-db2.authenticate()
-    .then(() => console.log("Database connected."))
-    .catch(err => console.log(err));
-*/
-/*
-var mysql = require('mysql');
-var connection = mysql.createConnection({
-  host: '35.224.12.41',
-  user: 'root',
-  password: '12345',
-  database: 'Users',
-})
-
-
-connection.connect();
-*/
-
 
 //POST - Adds a user to the Users Table
 router.post('/addUser',async (req,res) => {
     //{id: ip&mac-based hash}
     let bod = req.body;
-    await User.findByPk(bod.Username)
+    let idnum = Math.floor(Math.random() * 100000000);
+    while(await User.findByPk(idnum) !== null){
+        idnum = Math.floor(Math.random * 100000000);
+    }
+    await User.findOne({where: {username: bod.Username}})
         .then(async name => {
 
             if(name !== null){
@@ -46,12 +31,18 @@ router.post('/addUser',async (req,res) => {
 
                 await User.create({
 
-                    Username: bod.Username
+                    id:idnum,
+                    username:bod.Username
 
                 });
                 res.sendStatus(200);
 
             }
+
+        })
+        .catch(err => {
+
+            res.status(400).send(err);
 
         });
     
@@ -61,14 +52,13 @@ router.post('/addUser',async (req,res) => {
 //DELETE - Deletes a user from the Users Table
 router.delete('/deleteUser',async (req,res) => {
 
-    await User.findByPk(req.body.Username)
+    await User.findOne({where: {username: req.body.Username}})
         .then(async name => {
 
             if(name != null){
 
-                await User.destroy({where: {Username: req.body.Username}})
+                await User.destroy({where: {Username: req.body.Username}});
                 res.sendStatus(200);
-                console.log("User deleted");
 
             }
             else{
@@ -76,42 +66,43 @@ router.delete('/deleteUser',async (req,res) => {
             }
 
         })
+        .catch(err => res.status(400).send(err));
 });
 
 //POST - Adds a writing prompt to the Prompt Table 
-router.post('/addPrompt', (req,res) => {
+router.post('/addPrompt',async (req,res) => {
 
     let data = req.body;
-    connection.query("INSERT INTO Prompts (Number, Text) VALUES (" + data.Number +",'"+ data.Text + "');",function (err){
-        if(err) throw err
 
-        console.log("Prompt inserted");
-        res.sendStatus(200);
-    });
-    /*
-
-    let data = req.body;
     await Prompt.create({
 
-        Number: data.Number,
-        Text: data.Text
+        prompt: data.Text
 
     })
-    .then(res.sendStatus(200));
-
-    */
+    .then(res.sendStatus(200))
+    .catch(err => res.status(400).send(err));
 
 });
 
 //DELETE - Deletes a writing prompt from the Prompt Table
-router.delete('/deletePrompt', (req,res) => {
+router.delete('/deletePrompt', async (req,res) => {
 
-    connection.query("DELETE FROM Prompts WHERE Text=" + "'" + req.body.Text + "'",function (err){
-        if(err) throw err
+    let data = req.body;
+    await Prompt.findOne({where: {prompt: data.Text}})
+        .then(async text => {
+            if(text != null){
 
-        console.log("Prompt deleted");
-        res.sendStatus(200);
-    });
+                await Prompt.destroy({where: {prompt: data.Text}});
+                res.sendStatus(200);
+
+            }
+            else{
+                res.sendStatus(404);
+            }
+
+        })
+        .catch(err => res.status(400).send(err));
+
 
 });
 
