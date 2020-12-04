@@ -3,11 +3,17 @@ const db = require('../Router/database');
 
 const User = db.define('users', {
 
-    Username:{
+    id:{
+
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        primaryKey:true
+
+    },
+    username:{
 
         type: Sequelize.STRING,
         allowNull: false,
-        primaryKey:true
 
     }
 
