@@ -4,6 +4,7 @@ const router = express.Router();
 const db = require('./database');
 const User = require('../Models/User');
 const Prompt = require('../Models/Prompt');
+const { sequelize } = require('../Models/User');
 
 //Test connection
 db.authenticate()
@@ -88,7 +89,7 @@ router.post('/addPrompt',async (req,res) => {
 
 });
 
-//DELETE - Deletes a writing prompt from the Prompt Table
+//DELETE - Deletes a writing prompt from the prompts Table
 router.delete('/deletePrompt', async (req,res) => {
 
     let data = req.body;
@@ -109,6 +110,15 @@ router.delete('/deletePrompt', async (req,res) => {
 
 
 });
+
+//GET - Gets a random prompt from prompts table
+router.get('/', async (req,res) => {
+
+    await Prompt.findOne({order:sequelize.random()})
+        .then(encounter => {res.status(200).send(encounter.prompt)})
+        .catch(err => {res.sendStatus(400)});
+
+})
 
 //GET - Returns a list of results sorted by category and time period
 router.get('/scoreboard', (req,res) => {
