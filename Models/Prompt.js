@@ -1,14 +1,13 @@
 const Sequelize = require("sequelize");
-const db = require('../Router/database2');
+const db = require('../Router/database');
 
 const Prompt = db.define('prompts', {
 
-    Username:{
+    prompt:{
 
         type: Sequelize.STRING,
         allowNull: false,
         primaryKey:true
-
     }
 
 });
