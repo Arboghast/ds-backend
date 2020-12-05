@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const cors = require('cors');
 
 const db = require('./database');
 const User = require('../Models/User');
@@ -13,10 +14,10 @@ db.authenticate()
 
 
 //GET - Gets a random prompt from prompts table
-router.get('/', async (req,res) => {
+router.get('/prompt',(req,res) => {
 
-    await Prompt.findOne({order:sequelize.random()})
-        .then(encounter => {res.status(200).send(encounter.prompt)})
+    Prompt.findOne({order:sequelize.random()})
+        .then(encounter => {res.json({prompt: encounter.prompt})})
         .catch(err => {res.sendStatus(400)});
 
 })
