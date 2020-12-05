@@ -15,6 +15,11 @@ const Prompt = db.define('prompts', {
         type: Sequelize.STRING,
         allowNull: false,
 
+    },
+    language:{
+
+        type: Sequelize.STRING
+
     }
 
 });
