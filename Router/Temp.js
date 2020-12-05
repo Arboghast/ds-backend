@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const cors = require('cors');
 
 const db = require('./database');
 const User = require('../Models/User');
@@ -91,7 +90,8 @@ router.post('/addPrompt',async (req,res) => {
     await Prompt.create({
 
         id:idnum,
-        prompt: data.Text
+        prompt: data.Text,
+        language: data.Language
 
     })
     .then(res.sendStatus(200))
