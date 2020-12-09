@@ -13,17 +13,23 @@ db.authenticate()
 
 
 //GET - Gets a random prompt from prompts table
+//localhost:8000/prompt sends back a random prompt from the db
+//Takes 1 entry from the top in random order sends 200 if completed
+//and 400 is there was an error.
 router.get('/prompt',(req,res) => {
 
     Prompt.findOne({order:sequelize.random()})
-        .then(encounter => {res.json({prompt: encounter.prompt})})
+        .then(encounter => {res.status(200).send(encounter.prompt)})
         .catch(err => {res.sendStatus(400)});
 
 })
 
 //POST - Adds a user to the Users Table
+//localhost:8000/addUser Generates a random number used to identify an username
+//and then checks the if the username is already in the database. then sends back
+//a status of 422 Name taken, if the user does not exist then create it and send back a status of 200
+//otherwise catch the error and send it.
 router.post('/addUser',async (req,res) => {
-    //{id: ip&mac-based hash}
     let bod = req.body;
     let idnum = Math.floor(Math.random() * 100000000);
     while(await User.findByPk(idnum) !== null){
@@ -60,6 +66,9 @@ router.post('/addUser',async (req,res) => {
 
 
 //DELETE - Deletes a user from the Users Table
+//localhost:8000/deleteUser Searches the database for the username provided by 
+//the front end, if the user is found then delete that username from the database and send status 200.
+//if not found send 404 and 400 for errors along with the error recieved.
 router.delete('/deleteUser',async (req,res) => {
 
     await User.findOne({where: {username: req.body.Username}})
@@ -80,6 +89,9 @@ router.delete('/deleteUser',async (req,res) => {
 });
 
 //POST - Adds a writing prompt to the Prompt Table 
+//localhost:8000/addPrompt accepts a prompt and inserts it into the database.
+//creates a unique id and accepts the text and language of the codeing prompt.
+//sends 200 if success and 400 if error.
 router.post('/addPrompt',async (req,res) => {
 
     let data = req.body;
@@ -100,6 +112,8 @@ router.post('/addPrompt',async (req,res) => {
 });
 
 //DELETE - Deletes a writing prompt from the prompts Table
+//localhost::8000/deletePrompt finds the prompt and deletes it. accepts an id.
+//if the prompt is not found then sends 404 and 200 if success, otherwise sends error 400.
 router.delete('/deletePrompt', async (req,res) => {
 
     let data = req.body;
